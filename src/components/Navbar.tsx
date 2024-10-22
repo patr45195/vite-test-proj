@@ -15,6 +15,7 @@ const Navbar = () => {
           <a href="#">Contact</a>
         </li>
       </ul>
+      <div className="toggler">Toggler</div>
     </nav>
   );
 };
