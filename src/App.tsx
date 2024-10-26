@@ -30,7 +30,7 @@ function App() {
       <div className="content-container">
         <Navbar />
         <div className="main-content">
-          <CustomTable columns={columns} data={TABLE_DATA} />
+          <CustomTable columns={columns} data={TABLE_DATA} selectable />
         </div>
       </div>
     </div>
