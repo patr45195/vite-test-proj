@@ -5,6 +5,7 @@ export interface Column {
   label: string;
   sortable?: boolean;
   render?: (row: DataRow) => ReactNode;
+  style?: any;
 }
 
 export interface DataRow {
@@ -121,11 +122,13 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
                   />
                 </td>
               )}
-              {columns.map((column) => (
-                <td key={column.id}>
-                  {column.render ? column.render(row) : row[column.id]}
-                </td>
-              ))}
+              {columns.map((column) => {
+                return (
+                  <td key={column.id} style={column.style && column.style()}>
+                    {column.render ? column.render(row) : row[column.id]}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

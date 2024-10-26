@@ -6,7 +6,14 @@ import { TABLE_DATA } from "./constants";
 
 function App() {
   const columns: Column[] = [
-    { id: "name", label: "Name", sortable: true },
+    {
+      id: "name",
+      label: "Name",
+      sortable: true,
+      style: () => {
+        return { minWidth: "100px" };
+      },
+    },
     { id: "age", label: "Age", sortable: true },
     {
       id: "email",
