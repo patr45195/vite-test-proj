@@ -8,7 +8,13 @@ function App() {
   const columns: Column[] = [
     { id: "name", label: "Name", sortable: true },
     { id: "age", label: "Age", sortable: true },
-    { id: "email", label: "Email" },
+    {
+      id: "email",
+      label: "Email",
+      render: (row) => {
+        return <div>{row.email}</div>;
+      },
+    },
     {
       id: "actions",
       label: "Actions",

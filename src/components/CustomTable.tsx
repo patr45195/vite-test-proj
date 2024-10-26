@@ -21,9 +21,9 @@ export const CustomTable = ({ columns, data }: TableProps) => {
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
-  } | null>(null);
+  } | null>({ key: "age", direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(1000);
+  const [rowsPerPage] = useState(10);
 
   useEffect(() => {
     let sorted = [...data];
