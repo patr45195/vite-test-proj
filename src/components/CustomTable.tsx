@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 
 export interface Column {
   id: string;
@@ -23,7 +23,7 @@ export const CustomTable = ({ columns, data }: TableProps) => {
     direction: "asc" | "desc";
   } | null>({ key: "age", direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     let sorted = [...data];
@@ -61,6 +61,11 @@ export const CustomTable = ({ columns, data }: TableProps) => {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+
+  const handleRowsPerPageChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(parseInt(event.target.value));
+    setCurrentPage(1);
+  };
 
   return (
     <div className="table-container">
@@ -115,6 +120,17 @@ export const CustomTable = ({ columns, data }: TableProps) => {
         >
           Вперед
         </button>
+        <select
+          value={rowsPerPage}
+          onChange={handleRowsPerPageChange}
+          className="rows-per-page-select"
+        >
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+          <option value={3000}>3000</option>
+        </select>
       </div>
     </div>
   );

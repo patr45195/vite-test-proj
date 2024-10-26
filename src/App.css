@@ -115,4 +115,9 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.rows-per-page-select {
+  padding: 4px 8px;
+  margin-right: 10px;
+}
 /* table styles */
