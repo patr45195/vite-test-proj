@@ -14,9 +14,10 @@ export interface DataRow {
 interface TableProps {
   columns: Column[];
   data: DataRow[];
+  selectable?: boolean;
 }
 
-export const CustomTable = ({ columns, data }: TableProps) => {
+export const CustomTable = ({ columns, data, selectable }: TableProps) => {
   const [sortedData, setSortedData] = useState<DataRow[]>([]);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -24,6 +25,7 @@ export const CustomTable = ({ columns, data }: TableProps) => {
   } | null>({ key: "age", direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     let sorted = [...data];
@@ -67,11 +69,28 @@ export const CustomTable = ({ columns, data }: TableProps) => {
     setCurrentPage(1);
   };
 
+  const handleCheckboxChange = (index: number) => {
+    setSelectedRows((prevSelectedRows) => {
+      const updatedSelectedRows = new Set(prevSelectedRows);
+      if (updatedSelectedRows.has(index)) {
+        updatedSelectedRows.delete(index);
+      } else {
+        updatedSelectedRows.add(index);
+      }
+      return updatedSelectedRows;
+    });
+  };
+
   return (
     <div className="table-container">
       <table className="custom-table">
         <thead>
           <tr>
+            {selectable && (
+              <th>
+                <input type="checkbox" />
+              </th>
+            )}
             {columns.map((column) => (
               <th
                 key={column.id}
@@ -91,8 +110,17 @@ export const CustomTable = ({ columns, data }: TableProps) => {
           </tr>
         </thead>
         <tbody>
-          {paginatedData.map((row, rowIndex) => (
-            <tr key={rowIndex}>
+          {paginatedData.map((row) => (
+            <tr key={row.name}>
+              {selectable && (
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedRows.has(row.name)}
+                    onChange={() => handleCheckboxChange(row.name)}
+                  />
+                </td>
+              )}
               {columns.map((column) => (
                 <td key={column.id}>
                   {column.render ? column.render(row) : row[column.id]}
