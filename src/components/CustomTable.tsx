@@ -103,8 +103,8 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
                 {column.label}{" "}
                 {sortConfig?.key === column.id
                   ? sortConfig.direction === "asc"
-                    ? "▲"
-                    : "▼"
+                    ? "🠕"
+                    : "🠗"
                   : null}
               </th>
             ))}
