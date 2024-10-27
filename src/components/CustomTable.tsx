@@ -28,6 +28,7 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 
+  // client side pagination, delete this block if needed server side pagination
   useEffect(() => {
     let sorted = [...data];
     if (sortConfig !== null) {
