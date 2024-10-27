@@ -12,7 +12,7 @@ function App() {
       sortable: true,
       style: () => {
         return {
-          minWidth: "100px",
+          width: "200px",
           textAlign: "center",
           cursor: "pointer",
         };
@@ -24,7 +24,7 @@ function App() {
       sortable: true,
       style: () => {
         return {
-          minWidth: "100px",
+          width: "100px",
           textAlign: "center",
           cursor: "pointer",
         };

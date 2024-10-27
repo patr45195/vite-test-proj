@@ -140,17 +140,17 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
-          Назад
+          Backward
         </button>
         <span>
-          {currentPage} из {Math.ceil(data.length / rowsPerPage)}
+          {currentPage} of {Math.ceil(data.length / rowsPerPage)}
         </span>
         <button
           className="page-btn"
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === Math.ceil(data.length / rowsPerPage)}
         >
-          Вперед
+          Forward
         </button>
         <select
           value={rowsPerPage}
