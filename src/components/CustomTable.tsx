@@ -83,6 +83,14 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
     });
   };
 
+  const handleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      setSelectedRows(new Set(paginatedData.map((row) => row.name)));
+    } else {
+      setSelectedRows(new Set());
+    }
+  };
+
   return (
     <div className="table-container">
       <table className="custom-table">
@@ -90,7 +98,14 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
           <tr>
             {selectable && (
               <th className="checkbox-section">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={handleSelectAll}
+                  checked={
+                    paginatedData.length > 0 &&
+                    paginatedData.every((row) => selectedRows.has(row.name))
+                  }
+                />
               </th>
             )}
             {columns.map((column) => (
