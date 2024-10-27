@@ -11,10 +11,25 @@ function App() {
       label: "Name",
       sortable: true,
       style: () => {
-        return { minWidth: "100px" };
+        return {
+          minWidth: "100px",
+          textAlign: "center",
+          cursor: "pointer",
+        };
       },
     },
-    { id: "age", label: "Age", sortable: true },
+    {
+      id: "age",
+      label: "Age",
+      sortable: true,
+      style: () => {
+        return {
+          minWidth: "100px",
+          textAlign: "center",
+          cursor: "pointer",
+        };
+      },
+    },
     {
       id: "email",
       label: "Email",

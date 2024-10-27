@@ -88,7 +88,7 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
         <thead>
           <tr>
             {selectable && (
-              <th>
+              <th className="checkbox-section">
                 <input type="checkbox" />
               </th>
             )}
@@ -98,7 +98,7 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
                 onClick={
                   column.sortable ? () => handleSort(column.id) : undefined
                 }
-                style={{ cursor: column.sortable ? "pointer" : "default" }}
+                style={column.style?.()}
               >
                 {column.label}{" "}
                 {sortConfig?.key === column.id
@@ -124,7 +124,7 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
               )}
               {columns.map((column) => {
                 return (
-                  <td key={column.id} style={column.style && column.style()}>
+                  <td key={column.id} style={column.style?.()}>
                     {column.render ? column.render(row) : row[column.id]}
                   </td>
                 );
