@@ -1,4 +1,14 @@
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
+import React, { ChangeEvent, ReactNode, useMemo, useState } from "react";
+
+export interface TableProps {
+  columns: Column[];
+  data: DataRow[];
+  selectable: boolean;
+}
+
+export interface DataRow {
+  [key: string]: any
+}
 
 export interface Column {
   id: string;
@@ -8,18 +18,44 @@ export interface Column {
   style?: any;
 }
 
-export interface DataRow {
-  [key: string]: any;
-}
-
-interface TableProps {
-  columns: Column[];
-  data: DataRow[];
-  selectable?: boolean;
-}
+const TableRow = React.memo(
+  ({
+    row,
+    columns,
+    selectable,
+    isSelected,
+    onCheckboxChange,
+  }: {
+    row: DataRow;
+    columns: Column[];
+    selectable?: boolean;
+    isSelected: boolean;
+    onCheckboxChange: () => void;
+  }) => {
+    return (
+      <tr>
+        {selectable && (
+          <td>
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={onCheckboxChange}
+            />
+          </td>
+        )}
+        {columns.map((column) => (
+          <td key={column.id} style={column.style?.()}>
+            {column.render ? column.render(row) : row[column.id]}
+          </td>
+        ))}
+      </tr>
+    );
+  },
+  (prevProps, nextProps) =>
+    prevProps.row === nextProps.row && prevProps.isSelected === nextProps.isSelected
+);
 
 export const CustomTable = ({ columns, data, selectable }: TableProps) => {
-  const [sortedData, setSortedData] = useState<DataRow[]>([]);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
@@ -28,8 +64,7 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 
-  // client side pagination, delete this block if needed server side pagination
-  useEffect(() => {
+  const sortedData = useMemo(() => {
     let sorted = [...data];
     if (sortConfig !== null) {
       sorted = sorted.sort((a, b) => {
@@ -42,8 +77,15 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
         return 0;
       });
     }
-    setSortedData(sorted);
+    return sorted;
   }, [data, sortConfig]);
+
+  const paginatedData = useMemo(() => {
+    return sortedData.slice(
+      (currentPage - 1) * rowsPerPage,
+      currentPage * rowsPerPage
+    );
+  }, [sortedData, currentPage, rowsPerPage]);
 
   const handleSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
@@ -60,11 +102,6 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
-
-  const paginatedData = sortedData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
 
   const handleRowsPerPageChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(parseInt(event.target.value));
@@ -118,7 +155,7 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
               >
                 {column.label}{" "}
                 {sortConfig?.key === column.id
-                  ? sortConfig.direction === "asc"
+                  ? sortConfig?.direction === "asc"
                     ? "🠕"
                     : "🠗"
                   : null}
@@ -128,24 +165,14 @@ export const CustomTable = ({ columns, data, selectable }: TableProps) => {
         </thead>
         <tbody>
           {paginatedData.map((row) => (
-            <tr key={row.name}>
-              {selectable && (
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.has(row.name)}
-                    onChange={() => handleCheckboxChange(row.name)}
-                  />
-                </td>
-              )}
-              {columns.map((column) => {
-                return (
-                  <td key={column.id} style={column.style?.()}>
-                    {column.render ? column.render(row) : row[column.id]}
-                  </td>
-                );
-              })}
-            </tr>
+            <TableRow
+              key={row.name}
+              row={row}
+              columns={columns}
+              selectable={selectable}
+              isSelected={selectedRows.has(row.name)}
+              onCheckboxChange={() => handleCheckboxChange(row.name)}
+            />
           ))}
         </tbody>
       </table>
